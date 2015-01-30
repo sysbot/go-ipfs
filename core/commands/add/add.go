@@ -10,6 +10,7 @@ import (
 	cmds "github.com/jbenet/go-ipfs/commands"
 	files "github.com/jbenet/go-ipfs/commands/files"
 	core "github.com/jbenet/go-ipfs/core"
+	ccutil "github.com/jbenet/go-ipfs/core/commands/util"
 	importer "github.com/jbenet/go-ipfs/importer"
 	"github.com/jbenet/go-ipfs/importer/chunk"
 	dag "github.com/jbenet/go-ipfs/merkledag"
@@ -18,13 +19,16 @@ import (
 	u "github.com/jbenet/go-ipfs/util"
 
 	"github.com/jbenet/go-ipfs/Godeps/_workspace/src/github.com/cheggaaa/pb"
+	eventlog "github.com/jbenet/go-ipfs/thirdparty/eventlog"
 )
+
+var log = eventlog.Logger("core/cmds/add")
 
 // Error indicating the max depth has been exceded.
 var ErrDepthLimitExceeded = fmt.Errorf("depth limit exceeded")
 
 // how many bytes of progress to wait before sending a progress update message
-const progressReaderIncrement = 1024 * 256
+const progressReaderIncrement = 1024 * 4
 
 const progressOptionName = "progress"
 
@@ -123,7 +127,7 @@ remains to be implemented.
 		if found {
 			size = s.(int64)
 		}
-		showProgressBar := !quiet && size >= progressBarMinSize
+		showProgressBar := !quiet && size >= ccutil.ProgressBarMinSize
 
 		var bar *pb.ProgressBar
 		var terminalWidth int
@@ -211,20 +215,6 @@ func add(n *core.IpfsNode, readers []io.Reader) ([]*dag.Node, error) {
 	return dagnodes, nil
 }
 
-func addNode(n *core.IpfsNode, node *dag.Node) error {
-	err := n.DAG.AddRecursive(node) // add the file to the graph + local storage
-	if err != nil {
-		return err
-	}
-
-	err = n.Pinning.Pin(node, true) // ensure we keep it
-	if err != nil {
-		return err
-	}
-
-	return nil
-}
-
 func addFile(n *core.IpfsNode, file files.File, out chan interface{}, progress bool) (*dag.Node, error) {
 	if file.IsDirectory() {
 		return addDir(n, file, out, progress)
@@ -281,8 +271,7 @@ func addDir(n *core.IpfsNode, dir files.File, out chan interface{}, progress boo
 		return nil, err
 	}
 
-	err = addNode(n, tree)
-	if err != nil {
+	if err := ccutil.AddNode(n, tree); err != nil {
 		return nil, err
 	}
 
@@ -291,7 +280,8 @@ func addDir(n *core.IpfsNode, dir files.File, out chan interface{}, progress boo
 
 // outputDagnode sends dagnode info over the output channel
 func outputDagnode(out chan interface{}, name string, dn *dag.Node) error {
-	o, err := getOutput(dn)
+
+	o, err := ccutil.NodeOutput(dn)
 	if err != nil {
 		return err
 	}
