@@ -10,20 +10,22 @@ import (
 	context "github.com/jbenet/go-ipfs/Godeps/_workspace/src/code.google.com/p/go.net/context"
 	inflect "github.com/jbenet/go-ipfs/Godeps/_workspace/src/github.com/briantigerchow/inflect"
 
-	blocks "github.com/jbenet/go-ipfs/blocks"
-	blockstore "github.com/jbenet/go-ipfs/blocks/blockstore"
+	"github.com/jbenet/go-ipfs/thirdparty/delay"
+	eventlog "github.com/jbenet/go-ipfs/thirdparty/eventlog"
+	u "github.com/jbenet/go-ipfs/util"
+	errors "github.com/jbenet/go-ipfs/util/debugerror"
+	pset "github.com/jbenet/go-ipfs/util/peerset" // TODO move this to peerstore
+
+	peer "github.com/jbenet/go-ipfs/p2p/peer"
+
 	exchange "github.com/jbenet/go-ipfs/exchange"
 	decision "github.com/jbenet/go-ipfs/exchange/bitswap/decision"
 	bsmsg "github.com/jbenet/go-ipfs/exchange/bitswap/message"
 	bsnet "github.com/jbenet/go-ipfs/exchange/bitswap/network"
 	notifications "github.com/jbenet/go-ipfs/exchange/bitswap/notifications"
 	wantlist "github.com/jbenet/go-ipfs/exchange/bitswap/wantlist"
-	peer "github.com/jbenet/go-ipfs/p2p/peer"
-	"github.com/jbenet/go-ipfs/thirdparty/delay"
-	eventlog "github.com/jbenet/go-ipfs/thirdparty/eventlog"
-	u "github.com/jbenet/go-ipfs/util"
-	errors "github.com/jbenet/go-ipfs/util/debugerror"
-	pset "github.com/jbenet/go-ipfs/util/peerset" // TODO move this to peerstore
+	blocks "github.com/jbenet/go-ipfs/struct/blocks"
+	blockstore "github.com/jbenet/go-ipfs/struct/blocks/blockstore"
 )
 
 var log = eventlog.Logger("bitswap")

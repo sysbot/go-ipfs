@@ -11,10 +11,10 @@ import (
 	files "github.com/jbenet/go-ipfs/commands/files"
 	core "github.com/jbenet/go-ipfs/core"
 	ccutil "github.com/jbenet/go-ipfs/core/commands/util"
+	pinning "github.com/jbenet/go-ipfs/core/corerepo/pin"
 	importer "github.com/jbenet/go-ipfs/importer"
 	"github.com/jbenet/go-ipfs/importer/chunk"
-	dag "github.com/jbenet/go-ipfs/merkledag"
-	pinning "github.com/jbenet/go-ipfs/pin"
+	dag "github.com/jbenet/go-ipfs/struct/merkledag"
 	ft "github.com/jbenet/go-ipfs/unixfs"
 	u "github.com/jbenet/go-ipfs/util"
 

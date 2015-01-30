@@ -15,9 +15,9 @@ import (
 	core "github.com/jbenet/go-ipfs/core"
 	"github.com/jbenet/go-ipfs/importer"
 	chunk "github.com/jbenet/go-ipfs/importer/chunk"
-	dag "github.com/jbenet/go-ipfs/merkledag"
 	path "github.com/jbenet/go-ipfs/path"
 	"github.com/jbenet/go-ipfs/routing"
+	dag "github.com/jbenet/go-ipfs/struct/merkledag"
 	ufs "github.com/jbenet/go-ipfs/unixfs"
 	uio "github.com/jbenet/go-ipfs/unixfs/io"
 	u "github.com/jbenet/go-ipfs/util"
@@ -290,7 +290,7 @@ func (i *gatewayHandler) putHandler(w http.ResponseWriter, r *http.Request) {
 	urlPath := r.URL.Path
 	pathext := urlPath[5:]
 	var err error
-	if urlPath == IpfsPathPrefix + "QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn/" {
+	if urlPath == IpfsPathPrefix+"QmUNLLsPACCz1vLxQVkXqqLX5R1X345qqfHbsf67hvA3Nn/" {
 		i.putEmptyDirHandler(w, r)
 		return
 	}
