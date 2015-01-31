@@ -29,8 +29,11 @@ import (
 	fsrepo "github.com/jbenet/go-ipfs/repo/fsrepo"
 	eventlog "github.com/jbenet/go-ipfs/thirdparty/eventlog"
 	unit "github.com/jbenet/go-ipfs/thirdparty/unit"
+	eventlog "github.com/jbenet/go-ipfs/thirdparty/eventlog"
 	ds2 "github.com/jbenet/go-ipfs/util/datastore2"
 )
+
+var elog = eventlog.Logger("gc-client")
 
 var (
 	cat             = flag.Bool("cat", false, "else add")
@@ -182,6 +185,7 @@ func runFileCattingWorker(ctx context.Context, n *core.IpfsNode) error {
 				log.Fatal(err)
 			}
 			e := elog.EventBegin(ctx, "cat", eventlog.LoggableF(func() map[string]interface{} {
+<<<<<<< HEAD
 				return map[string]interface{}{
 					"key":       k,
 					"localPeer": n.Identity,
